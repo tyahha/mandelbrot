@@ -1,8 +1,26 @@
 use std::str::FromStr;
 use num::Complex;
+use image::ColorType;
+use image::png::PNGEncoder;
+use std::fs::File;
 
 fn main() {
     println!("Hello, world!");
+}
+
+/// 大きさが`bounds`で指定されたバッファ`pixels`を`filename`で指定されたファイルに書き出す
+fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<(), std::io::Error> {
+    let output = File::create(filename)?;
+
+    let encoder = PNGEncoder::new(output);
+    encoder.encode(
+        pixels,
+        bounds.0 as u32,
+        bounds.1 as u32,
+        ColorType::Gray(8)
+    )?;
+
+    Ok(())
 }
 
 /// 'limit'を繰り返し回数の上限として、'c'がマンデンブロ集合に含まれるかどうかを判定する
